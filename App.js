@@ -1,6 +1,6 @@
 // Profile Card — practical task (React Native basics)
 // Follow the steps in README.md and build your solution in this file.
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 
 // Data to display.
 const NAME = 'Emmanuel Alejandro';
@@ -22,6 +22,21 @@ const SKILLS = [
   'Bases de datos',
   'Desarrollo web',
 ];
+
+// STEP 5: every color used in the styles comes from here.
+const COLORS = {
+  background: '#EEF1F6',
+  card: '#FFFFFF',
+  text: '#1F2430',
+  muted: '#6B7280',
+  primary: '#2F6FEB',
+  primaryLight: '#E8EFFD',
+  border: '#E5E7EB',
+  online: '#22C55E',
+  shadow: '#000000',
+};
+
+const CARD_RADIUS = 20;
 
 export default function App() {
   return (
@@ -54,8 +69,8 @@ export default function App() {
 
           {/* STEP 3: stats row with three equal columns */}
           <View style={styles.stats}>
-            {STATS.map((stat) => (
-              <View key={stat.label} style={styles.stat}>
+            {STATS.map((stat, index) => (
+              <View key={stat.label} style={[styles.stat, index > 0 && styles.statDivider]}>
                 <Text style={styles.statValue}>{stat.value}</Text>
                 <Text style={styles.statLabel}>{stat.label}</Text>
               </View>
@@ -73,8 +88,8 @@ export default function App() {
 
           {/* STEP 4: action buttons with equal width */}
           <View style={styles.actions}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Seguir</Text>
+            <View style={[styles.button, styles.buttonPrimary]}>
+              <Text style={[styles.buttonText, styles.buttonTextPrimary]}>Seguir</Text>
             </View>
             <View style={styles.button}>
               <Text style={styles.buttonText}>Mensaje</Text>
@@ -82,7 +97,6 @@ export default function App() {
           </View>
         </View>
       </View>
-      {/* TODO STEP 5: polish the styles (colors, typography, shadow) */}
     </View>
   );
 }
@@ -90,59 +104,48 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingTop: 64,
+    justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#EEF1F6',
+    backgroundColor: COLORS.background,
   },
+  // No overflow: 'hidden' here, because on iOS it would also clip the shadow.
   card: {
-    backgroundColor: '#FFFFFF',
-    overflow: 'hidden',
+    backgroundColor: COLORS.card,
+    borderRadius: CARD_RADIUS,
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.12,
+        shadowRadius: 16,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
+  // The banner rounds its own top corners to follow the card.
   banner: {
     width: '100%',
     height: 120,
+    borderTopLeftRadius: CARD_RADIUS,
+    borderTopRightRadius: CARD_RADIUS,
   },
   // The padding lives here so the banner can span the full card width.
   body: {
     padding: 20,
     paddingTop: 0,
   },
+  header: {
+    flexDirection: 'row',
+    marginTop: -48,
+  },
   avatar: {
     width: 96,
     height: 96,
     borderRadius: 48,
     borderWidth: 4,
-    borderColor: '#FFFFFF',
-  },
-  header: {
-    flexDirection: 'row',
-    marginTop: -48,
-  },
-  // Pushes the texts below the banner (the avatar overlaps it by 48).
-  info: {
-    flex: 1,
-    marginLeft: 12,
-    paddingTop: 52,
-  },
-  stats: {
-    flexDirection: 'row',
-    marginTop: 16,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  stat: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    fontSize: 13,
-    color: '#6B7280',
+    borderColor: COLORS.card,
   },
   badge: {
     position: 'absolute',
@@ -152,8 +155,62 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
-    backgroundColor: '#22C55E',
+    borderColor: COLORS.card,
+    backgroundColor: COLORS.online,
+  },
+  // Pushes the texts below the banner (the avatar overlaps it by 48).
+  info: {
+    flex: 1,
+    marginLeft: 12,
+    paddingTop: 56,
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: COLORS.text,
+  },
+  role: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: COLORS.primary,
+    marginTop: 2,
+  },
+  location: {
+    fontSize: 14,
+    color: COLORS.muted,
+    marginTop: 2,
+  },
+  bio: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: COLORS.text,
+    marginTop: 16,
+  },
+  stats: {
+    flexDirection: 'row',
+    marginTop: 16,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: COLORS.border,
+  },
+  stat: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statDivider: {
+    borderLeftWidth: 1,
+    borderColor: COLORS.border,
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.text,
+  },
+  statLabel: {
+    fontSize: 13,
+    color: COLORS.muted,
+    marginTop: 2,
   },
   tags: {
     flexDirection: 'row',
@@ -164,10 +221,13 @@ const styles = StyleSheet.create({
   tag: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#F3F4F6',
+    borderRadius: 999,
+    backgroundColor: COLORS.primaryLight,
   },
   tagText: {
     fontSize: 13,
+    fontWeight: '600',
+    color: COLORS.primary,
   },
   actions: {
     flexDirection: 'row',
@@ -178,25 +238,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 12,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#2F6FEB',
+    borderColor: COLORS.primary,
+  },
+  buttonPrimary: {
+    backgroundColor: COLORS.primary,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: COLORS.primary,
   },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  role: {
-    fontSize: 16,
-  },
-  location: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  bio: {
-    fontSize: 15,
+  buttonTextPrimary: {
+    color: COLORS.card,
   },
 });
