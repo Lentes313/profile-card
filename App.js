@@ -1,6 +1,13 @@
 // Profile Card — practical task (React Native basics)
 // Follow the steps in README.md and build your solution in this file.
-import { View, Text, Image, StyleSheet, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
 
 // Data to display.
 const NAME = 'Emmanuel Alejandro';
@@ -37,12 +44,35 @@ const COLORS = {
 };
 
 const CARD_RADIUS = 20;
+const WIDE_SCREEN = 600;
+
+// BONUS: reusable components with props.
+function StatItem({ label, value, divider }) {
+  return (
+    <View style={[styles.stat, divider && styles.statDivider]}>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function Tag({ label }) {
+  return (
+    <View style={styles.tag}>
+      <Text style={styles.tagText}>{label}</Text>
+    </View>
+  );
+}
 
 export default function App() {
+  // BONUS: on wide screens (tablets, web) the card keeps a max width.
+  const { width } = useWindowDimensions();
+  const isWide = width > WIDE_SCREEN;
+
   return (
     <View style={styles.screen}>
       {/* STEP 1: card with View and Text (name, role, location, bio) */}
-      <View style={styles.card}>
+      <View style={[styles.card, isWide && styles.cardWide]}>
         {/* STEP 2: banner and avatar with Image */}
         <Image
           source={require('./assets/banner.png')}
@@ -70,20 +100,24 @@ export default function App() {
           {/* STEP 3: stats row with three equal columns */}
           <View style={styles.stats}>
             {STATS.map((stat, index) => (
-              <View key={stat.label} style={[styles.stat, index > 0 && styles.statDivider]}>
-                <Text style={styles.statValue}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
-              </View>
+              <StatItem
+                key={stat.label}
+                label={stat.label}
+                value={stat.value}
+                divider={index > 0}
+              />
             ))}
           </View>
 
           {/* STEP 4: skill tags that wrap to the next line */}
-          <View style={styles.tags}>
-            {SKILLS.map((skill) => (
-              <View key={skill} style={styles.tag}>
-                <Text style={styles.tagText}>{skill}</Text>
-              </View>
-            ))}
+          {/* BONUS: section with a title above the tags */}
+          <View style={styles.skills}>
+            <Text style={styles.sectionTitle}>Habilidades</Text>
+            <View style={styles.tags}>
+              {SKILLS.map((skill) => (
+                <Tag key={skill} label={skill} />
+              ))}
+            </View>
           </View>
 
           {/* STEP 4: action buttons with equal width */}
@@ -124,6 +158,11 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  cardWide: {
+    width: '100%',
+    maxWidth: 420,
+    alignSelf: 'center',
+  },
   // The banner rounds its own top corners to follow the card.
   banner: {
     width: '100%',
@@ -136,8 +175,10 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
   },
+  // flex-start keeps the avatar wrapper at 96 high, so the badge stays on its corner.
   header: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
     marginTop: -48,
   },
   avatar: {
@@ -212,11 +253,21 @@ const styles = StyleSheet.create({
     color: COLORS.muted,
     marginTop: 2,
   },
+  skills: {
+    marginTop: 16,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: COLORS.muted,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+  },
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginTop: 16,
+    marginTop: 8,
   },
   tag: {
     paddingHorizontal: 12,
