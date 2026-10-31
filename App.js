@@ -35,16 +35,30 @@ export default function App() {
           resizeMode="cover"
         />
         <View style={styles.body}>
-          <Image source={require('./assets/avatar.png')} style={styles.avatar} />
-          <Text style={styles.name}>{NAME}</Text>
-          <Text style={styles.role}>{ROLE}</Text>
-          <Text style={styles.location}>{LOCATION}</Text>
+          {/* STEP 3: header row (avatar + texts side by side) */}
+          <View style={styles.header}>
+            <Image source={require('./assets/avatar.png')} style={styles.avatar} />
+            <View style={styles.info}>
+              <Text style={styles.name}>{NAME}</Text>
+              <Text style={styles.role}>{ROLE}</Text>
+              <Text style={styles.location}>{LOCATION}</Text>
+            </View>
+          </View>
           <Text style={styles.bio} numberOfLines={3}>
             {BIO}
           </Text>
+
+          {/* STEP 3: stats row with three equal columns */}
+          <View style={styles.stats}>
+            {STATS.map((stat) => (
+              <View key={stat.label} style={styles.stat}>
+                <Text style={styles.statValue}>{stat.value}</Text>
+                <Text style={styles.statLabel}>{stat.label}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
-      {/* TODO STEP 3: header row and stats row with Flexbox */}
       {/* TODO STEP 4: online badge, skill tags and action buttons (layout) */}
       {/* TODO STEP 5: polish the styles (colors, typography, shadow) */}
     </View>
@@ -77,7 +91,36 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     borderWidth: 4,
     borderColor: '#FFFFFF',
+  },
+  header: {
+    flexDirection: 'row',
     marginTop: -48,
+  },
+  // Pushes the texts below the banner (the avatar overlaps it by 48).
+  info: {
+    flex: 1,
+    marginLeft: 12,
+    paddingTop: 52,
+  },
+  stats: {
+    flexDirection: 'row',
+    marginTop: 16,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  stat: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: 13,
+    color: '#6B7280',
   },
   name: {
     fontSize: 24,
