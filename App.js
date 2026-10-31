@@ -28,14 +28,22 @@ export default function App() {
     <View style={styles.screen}>
       {/* STEP 1: card with View and Text (name, role, location, bio) */}
       <View style={styles.card}>
-        <Text style={styles.name}>{NAME}</Text>
-        <Text style={styles.role}>{ROLE}</Text>
-        <Text style={styles.location}>{LOCATION}</Text>
-        <Text style={styles.bio} numberOfLines={3}>
-          {BIO}
-        </Text>
+        {/* STEP 2: banner and avatar with Image */}
+        <Image
+          source={require('./assets/banner.png')}
+          style={styles.banner}
+          resizeMode="cover"
+        />
+        <View style={styles.body}>
+          <Image source={require('./assets/avatar.png')} style={styles.avatar} />
+          <Text style={styles.name}>{NAME}</Text>
+          <Text style={styles.role}>{ROLE}</Text>
+          <Text style={styles.location}>{LOCATION}</Text>
+          <Text style={styles.bio} numberOfLines={3}>
+            {BIO}
+          </Text>
+        </View>
       </View>
-      {/* TODO STEP 2: add the banner and the avatar with Image */}
       {/* TODO STEP 3: header row and stats row with Flexbox */}
       {/* TODO STEP 4: online badge, skill tags and action buttons (layout) */}
       {/* TODO STEP 5: polish the styles (colors, typography, shadow) */}
@@ -52,7 +60,24 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+  },
+  banner: {
+    width: '100%',
+    height: 120,
+  },
+  // The padding lives here so the banner can span the full card width.
+  body: {
     padding: 20,
+    paddingTop: 0,
+  },
+  avatar: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    borderWidth: 4,
+    borderColor: '#FFFFFF',
+    marginTop: -48,
   },
   name: {
     fontSize: 24,
