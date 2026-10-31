@@ -37,7 +37,11 @@ export default function App() {
         <View style={styles.body}>
           {/* STEP 3: header row (avatar + texts side by side) */}
           <View style={styles.header}>
-            <Image source={require('./assets/avatar.png')} style={styles.avatar} />
+            {/* STEP 4: the wrapper lets the badge sit on the avatar's corner */}
+            <View>
+              <Image source={require('./assets/avatar.png')} style={styles.avatar} />
+              <View style={styles.badge} />
+            </View>
             <View style={styles.info}>
               <Text style={styles.name}>{NAME}</Text>
               <Text style={styles.role}>{ROLE}</Text>
@@ -57,9 +61,27 @@ export default function App() {
               </View>
             ))}
           </View>
+
+          {/* STEP 4: skill tags that wrap to the next line */}
+          <View style={styles.tags}>
+            {SKILLS.map((skill) => (
+              <View key={skill} style={styles.tag}>
+                <Text style={styles.tagText}>{skill}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* STEP 4: action buttons with equal width */}
+          <View style={styles.actions}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Seguir</Text>
+            </View>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Mensaje</Text>
+            </View>
+          </View>
         </View>
       </View>
-      {/* TODO STEP 4: online badge, skill tags and action buttons (layout) */}
       {/* TODO STEP 5: polish the styles (colors, typography, shadow) */}
     </View>
   );
@@ -121,6 +143,47 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 13,
     color: '#6B7280',
+  },
+  badge: {
+    position: 'absolute',
+    right: 6,
+    bottom: 6,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    backgroundColor: '#22C55E',
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 16,
+  },
+  tag: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#F3F4F6',
+  },
+  tagText: {
+    fontSize: 13,
+  },
+  actions: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 20,
+  },
+  button: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#2F6FEB',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   name: {
     fontSize: 24,
